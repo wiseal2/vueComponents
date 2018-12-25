@@ -2,7 +2,7 @@
   <Table :columns="columns" :scroll='scroll' :dataSource="data" bordered>
     <template v-for="col in slots" :slot="col" slot-scope="text, record, index">
       <div>
-        <Tooltip v-if="record.editable" placement="bottom" >
+        <Tooltip v-if="record.editable&&record.descriptions" placement="bottom" >
           <template v-if='record.descriptions[col]' slot="title">
            <span>{{record.descriptions[col]}}</span>
           </template>
@@ -10,7 +10,7 @@
             <Option value='1'>合格</Option>
             <Option value='0'>不合格</Option>
           </Select>
-          <DatePicker format='YYYY-MM-DD HH:mm:ss' @change="(moment,dateStr)=>dateChange(moment,dateStr, record.key, col)"  v-else-if="col=='lately_calibration1'||col=='next_calibration1'||col=='install_date1'||col=='measure_state_date1'">
+          <DatePicker placeholder='请选择日期' format='YYYY-MM-DD HH:mm:ss' @change="(moment,dateStr)=>dateChange(moment,dateStr, record.key, col)"  v-else-if="col=='lately_calibration1'||col=='next_calibration1'||col=='install_date1'||col=='measure_state_date1'">
           </DatePicker>
           <Select @change="v => selectChange(v, record.key, col)" :defaultValue="['','用能单位','能源供应公司','第三方公司'][text]" class="edit_select" v-else-if="col=='install_org'">
             <Option value='1'>用能单位</Option>
@@ -40,13 +40,13 @@
       <div class='editable-row-operations'>
         <span v-if="record.editable">
           <a @click="() => save(record.key)">保存</a>
-          <Popconfirm title='确定取消?' @confirm="() => cancel(record.key)">
+          <Popconfirm title='确定取消?' @cancel = popCancel(record.key) okText='确定' cancelText='取消' @confirm="() => cancel(record.key)">
             <a style="margin-left:10px;">取消</a>
           </Popconfirm>
         </span>
         <span v-else>
           <a @click="() => edit(record.key,'edit')" style="margin-right:10px">编辑</a>|
-          <Popconfirm title='确定删除?' @confirm="() => del(record.key)">
+          <Popconfirm title='确定删除?' okText='确定' cancelText='取消' @confirm="() => del(record.key)">
             <a style="margin-left:10px;">删除</a>
           </Popconfirm>
         </span>
@@ -173,15 +173,21 @@ export default {
           this.$emit('add',target);
         }
         this.$emit('update:tableData',this.data);
+        this.ope = 'edit';
       }
     },
     cancel (key) {
       const newData = [...this.data]
       const target = newData.filter(item => key === item.key)[0]
       if (target) {
-        Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
-        delete target.editable
-        this.data = newData
+        if(this.ope=='add'){
+          this.tableData.splice(0,1);
+          this.ope='edit';
+        }else{
+          Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
+          delete target.editable
+          this.data = newData
+        }
       }
     },
     del(key){
@@ -196,11 +202,19 @@ export default {
       this.data = newData;
       this.$emit('update:tableData',this.data);
       this.$emit('del',target)
-    }
+    },
+    popCancel(key){
+ 
+    },
   },
   created(){
     this.$message = message;
     this.$eventBus.$on('add',(v)=>{
+      if(this.ope=='add'){
+        this.$message.warning('请保存完数据后再新增');
+        this.tableData.splice(0,1);
+        return false;
+      }
       this.ope = 'add';
       this.edit(v);
     });

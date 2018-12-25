@@ -12,8 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': { // 这里是我配置的名字
-          target: 'http://192.168.1.115:9999', 
-          // target: 'http://192.168.1.106:9999', //朱亚忠
+          // target: 'http://192.168.1.115:9999', 
+          target: 'http://192.168.1.106:9999', //朱亚忠
           changeOrigin: true, // 开启代理
           pathRewrite: { '^/': '/' }, // 这里重写路径/run就代理到对应地址
       },

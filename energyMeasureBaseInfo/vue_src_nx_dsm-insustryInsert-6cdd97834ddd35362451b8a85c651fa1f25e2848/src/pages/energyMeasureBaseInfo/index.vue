@@ -113,7 +113,7 @@ export default {
         if(res.code==0){
          this.$message.success('更新成功');
         }else{
-          this.$message.success('更新失败');
+          this.$message.error('更新失败');
         }
       });
     },
@@ -124,7 +124,7 @@ export default {
         if(res.code==0){
          this.$message.success('删除成功');
         }else{
-          this.$message.success('删除失败');
+          this.$message.error('删除失败');
         }
       })
     },
@@ -143,8 +143,9 @@ export default {
       addList(value).then(res=>{
         if(res.code==0){
          this.$message.success('增加成功');
+         this.query();
         }else{
-          this.$message.success('增加失败');
+          this.$message.error('增加失败');
         }
       })
     },
@@ -177,7 +178,9 @@ export default {
         measure_state:'',
         measure_state_date1:'',
       });
-      this.$eventBus.$emit('add',key);
+      this.$nextTick(()=>{
+       this.$eventBus.$emit('add',key);
+      })
     },
   },
   mounted() {

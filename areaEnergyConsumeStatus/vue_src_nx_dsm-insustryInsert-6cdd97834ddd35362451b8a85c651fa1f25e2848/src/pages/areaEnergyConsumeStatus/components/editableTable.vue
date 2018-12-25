@@ -15,7 +15,7 @@
       <div class='editable-row-operations'>
         <span v-if="record.editable">
           <a @click="() => save(record.id)">保存</a>
-          <Popconfirm title='确定取消?' @confirm="() => cancel(record.id)">
+          <Popconfirm title='确定取消?' okText='确定' cancelText='取消' @confirm="() => cancel(record.id)">
             <a style="margin-left:10px;">取消</a>
           </Popconfirm>
         </span>
@@ -86,12 +86,13 @@ export default {
       const newData = [...this.data]
       const target = newData.filter(item => key === item.id)[0]
       let minus = '',plus='';
-      if(isNaN(1*value)){
+      let regex = /^(\-|\+)?\d+(\.\d+)?$/;
+      if(value!=''&&value!='-'&&!regex.test(value)){
         this.$message.error('非法的输入数据');
         return;
       }
       if (target) {
-        target[column] = 1*value;
+        target[column] = value;
         await this.withMinus(target).then(res=>{
          minus = res.data;
         });

@@ -10,7 +10,7 @@
 <script>
 import EditableTable from "./components/editableTable";
 import Header from "./components/header";
-import { Spin } from "ant-design-vue";
+import { Spin,message} from "ant-design-vue";
 import { getList,updateList,getTimeZone,getDistricts} from "../../common/public.js";
 import moment from "moment";
 import "moment/locale/zh-cn";
@@ -31,7 +31,8 @@ export default {
   components: {
     EditableTable,
     Header,
-    Spin
+    Spin,
+    message,
   },
   props: {},
   data() {
@@ -82,16 +83,16 @@ export default {
         columns.push(column_obj);
         slots_arr = slots_arr.concat([`a${index+1}`,`b${index+1}`]);
         scrollX+=500;
-        this.tableScoll['x'] = scrollX;
       })
-      // columns.push({
-      //   title:'操作',
-      //   width:200,
-      //   dataIndex:'operation',
-      //   fixed:'right',
-      //   align:'center',
-      //   scopedSlots:{customRender:'operation'}
-      // })
+      columns.push({
+        title:'操作',
+        width:200,
+        dataIndex:'operation',
+        fixed:'right',
+        align:'center',
+        scopedSlots:{customRender:'operation'}
+      })
+      this.tableScoll['x'] = scrollX;
       this.slots_arr = slots_arr;
       this.columns = columns;
     },
@@ -107,8 +108,13 @@ export default {
     },
     update(value){
       updateList(value).then((res)=>{
-        console.log(res);
-      });
+        if(res&&res.code==0){
+          this.$message.success('更新成功');
+        }else{
+          this.$message.error('更新失败');
+          this.query();
+        }
+      })
     },
     projectChange(value){
       this.type = value;
@@ -139,6 +145,7 @@ export default {
     // this.query(INIT_TIME_ZONE);
   },
   created(){
+    this.$message = message;
     //获取计划
     getTimeZone('000210000').then((res)=>{
       if(res.code==0){

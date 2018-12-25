@@ -1,7 +1,7 @@
 <template>
 <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0;">
    <div class="select_box" style="display:flex;justify-content:space-between;align-items:center;">
-     <div class="ib mgn20" style="white-space:nowrap;">计量器名称：</div>
+     <div class="ib mgn20" style="white-space:nowrap;">计量器具名称：</div>
      <Input class="measure_input" @pressEnter='query' v-model='measure_name'/>
      <Button @click='query'>查询</Button>
    </div>

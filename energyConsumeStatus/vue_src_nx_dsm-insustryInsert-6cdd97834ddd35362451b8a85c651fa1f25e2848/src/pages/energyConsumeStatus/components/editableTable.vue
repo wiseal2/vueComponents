@@ -15,7 +15,7 @@
       <div class='editable-row-operations'>
         <span v-if="record.editable">
           <a @click="() => save(record.key)">保存</a>
-          <Popconfirm title='确定取消?' @confirm="() => cancel(record.key)">
+          <Popconfirm title='确定取消?' okText='确认' cancelText='取消' @confirm="() => cancel(record.key)">
             <a style="margin-left:10px;">取消</a>
           </Popconfirm>
         </span>
@@ -38,16 +38,6 @@ import {
   Select
 } from "ant-design-vue";
 import { deleteRecord, editRecord } from "../../../common/public.js";
-
-
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i.toString(),
-//     name: `Edrward ${i}`,
-//     age: 32,
-//     address: `London Park no. ${i}`,
-//   })
-// }
 export default {
   props:{
     columns:{
@@ -93,12 +83,14 @@ export default {
     handleChange (value, key, column) {
       const newData = [...this.data]
       const target = newData.filter(item => key === item.key)[0]
-      if(isNaN(1*value)){
+      // value = value==''?0:1*value;
+      let regex = /^(\-|\+)?\d+(\.\d+)?$/;
+      if(value!=''&&value!='-'&&!regex.test(value)){
         this.$message.error('非法的输入数据');
         return;
       }
       if (target) {
-        target[column] = 1*value;
+        target[column] = value;
         this.data = newData
       }
     },
