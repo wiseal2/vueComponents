@@ -101,7 +101,7 @@ export default {
               item['key'] = index;
             })
             this.generateColumns();
-            this.tableData = res.rows;
+            this.tableData = res.rows.reverse();
             this.loading = false;
           }
         })

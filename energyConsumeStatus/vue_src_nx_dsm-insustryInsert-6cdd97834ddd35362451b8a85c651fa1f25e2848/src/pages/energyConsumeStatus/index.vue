@@ -107,6 +107,12 @@ export default {
       })
     },
     update(value){
+      for(let v in value){
+        console.log(value[v])
+        if(!value[v]||value[v]=='-'){
+          value[v] = 0;
+        }
+      }
       updateList(value).then((res)=>{
         if(res&&res.code==0){
           this.$message.success('更新成功');

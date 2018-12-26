@@ -105,9 +105,9 @@ export default {
       }
       value['year'] = this.year_data;
       value['parent_city'] = this.area_data;
-      value['energy_increase_target'] = value['energy_increase_target']?value['energy_increase_target']:0;
-      value['gdp_lower_target'] = value['gdp_lower_target']?value['gdp_lower_target']:0;
-      value['total_energy_consumption'] = value['total_energy_consumption']?value['total_energy_consumption']:0;
+      value['energy_increase_target'] = (value['energy_increase_target']&&value['energy_increase_target']!='-')?value['energy_increase_target']:0;
+      value['gdp_lower_target'] = (value['gdp_lower_target']&&value['gdp_lower_target']!='-')?value['gdp_lower_target']:0;
+      value['total_energy_consumption'] = (value['total_energy_consumption']&&value['total_energy_consumption']!='-')?value['total_energy_consumption']:0;
       updateList(value).then((res)=>{
         if(res.code==0){
           this.$message.success('更新成功');

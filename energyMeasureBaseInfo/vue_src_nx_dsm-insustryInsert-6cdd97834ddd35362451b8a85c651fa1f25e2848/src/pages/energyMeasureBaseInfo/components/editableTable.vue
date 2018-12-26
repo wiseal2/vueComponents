@@ -6,7 +6,7 @@
           <template v-if='record.descriptions[col]' slot="title">
            <span>{{record.descriptions[col]}}</span>
           </template>
-          <Select @change="v => selectChange(v, record.key, col)" :defaultValue="['合格','不合格'][text]" class="edit_select" v-if="col=='calibration_state'">
+          <Select @change="v => selectChange(v, record.key, col)" :defaultValue="['不合格','合格'][text]" class="edit_select" v-if="col=='calibration_state'">
             <Option value='1'>合格</Option>
             <Option value='0'>不合格</Option>
           </Select>
@@ -29,7 +29,7 @@
         />
         </Tooltip>
         <template v-else>
-          <span v-if='col=="calibration_state"'>{{['合格','不合格'][text]}}</span>
+          <span v-if='col=="calibration_state"'>{{['不合格','合格'][text]}}</span>
           <span v-else-if='col=="install_org"'>{{['','用能单位','能源供应公司','第三方公司'][text]}}</span>
           <span v-else-if='col=="measure_state"'>{{['','正常','故障','停用'][text]}}</span>
           <span v-else>{{text}}</span>
@@ -173,7 +173,7 @@ export default {
           this.$emit('add',target);
         }
         this.$emit('update:tableData',this.data);
-        this.ope = 'edit';
+        this.ope = '';
       }
     },
     cancel (key) {
@@ -210,7 +210,7 @@ export default {
   created(){
     this.$message = message;
     this.$eventBus.$on('add',(v)=>{
-      if(this.ope=='add'){
+      if(this.ope=='add'||this.ope=='edit'){
         this.$message.warning('请保存完数据后再新增');
         this.tableData.splice(0,1);
         return false;
