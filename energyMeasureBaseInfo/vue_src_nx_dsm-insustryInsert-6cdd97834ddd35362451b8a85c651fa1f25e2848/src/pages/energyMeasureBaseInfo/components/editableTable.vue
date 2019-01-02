@@ -110,7 +110,7 @@ export default {
       data:[],
       slots:[],
       cacheData:[],
-      ope:'edit',
+      ope:'',
     }
   },
   methods: {
@@ -182,7 +182,7 @@ export default {
       if (target) {
         if(this.ope=='add'){
           this.tableData.splice(0,1);
-          this.ope='edit';
+          this.ope='';
         }else{
           Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
           delete target.editable
